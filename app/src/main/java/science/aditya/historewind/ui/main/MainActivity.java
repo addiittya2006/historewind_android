@@ -5,7 +5,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,6 +34,7 @@ import science.aditya.historewind.R;
 import science.aditya.historewind.data.model.Digest;
 import science.aditya.historewind.data.model.Event;
 import science.aditya.historewind.data.model.HistoryEvent;
+import science.aditya.historewind.ui.anim.CustomArrowAnim;
 import science.aditya.historewind.ui.events.EventFragment;
 import science.aditya.historewind.ui.events.EventPagerAdapter;
 import science.aditya.historewind.ui.util.CustomCardTransformer;
@@ -43,8 +49,14 @@ public class MainActivity extends FragmentActivity {
     private ViewPager mPager;
     private EventPagerAdapter mPagerAdapter;
     private List<HistoryEvent> curDigest = new ArrayList<>();
+    private int screenWidth;
+    private RelativeLayout actionBar;
+    private ImageView arr1, arr2, arr3;
+    private CustomArrowAnim customArrowAnim;
+    private FrameLayout tintWindow;
+    private Digest digest;
 
-    private final String BASE_URL = "https://history.aditya.science/September_11/morn_digest.json";
+    private final String BASE_URL = "https://history.aditya.science/September_12/morn_digest.json";
 
     private RequestQueue requestQueue;
 
@@ -57,10 +69,26 @@ public class MainActivity extends FragmentActivity {
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
 
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        screenWidth = displaymetrics.widthPixels;
+
+        actionBar = (RelativeLayout) findViewById(R.id.bar);
+        actionBar.setVisibility(View.GONE);
+
+        tintWindow = (FrameLayout) findViewById(R.id.tint);
+
+        arr1 = (ImageView) findViewById(R.id.arr1);
+        arr2 = (ImageView) findViewById(R.id.arr2);
+        arr3 = (ImageView) findViewById(R.id.arr3);
+
+        customArrowAnim = new CustomArrowAnim(screenWidth, arr1, arr2, arr3);
+        customArrowAnim.start();
 
         mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new EventPagerAdapter(getApplicationContext(), getSupportFragmentManager(), 2 * (getResources().getDisplayMetrics().density), curDigest);
+        mPagerAdapter = new EventPagerAdapter(getSupportFragmentManager(), 2 * (getResources().getDisplayMetrics().density), curDigest);
         mPager.setAdapter(mPagerAdapter);
+        mPager.setVisibility(View.GONE);
 
         CustomCardTransformer customCardTransformer = new CustomCardTransformer(mPager, mPagerAdapter);
         customCardTransformer.enableScaling(true);
@@ -103,7 +131,8 @@ public class MainActivity extends FragmentActivity {
                             cachedDigest = openFileInput("current.digest");
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }}
+                        }
+                    }
                         try {
                             BufferedReader br = new BufferedReader(new InputStreamReader(cachedDigest, "UTF-8"));
                             StringBuilder sb = new StringBuilder();
@@ -114,15 +143,18 @@ public class MainActivity extends FragmentActivity {
                             }
 
                             Gson gson = new Gson();
-                            Digest digest;
                             digest = gson.fromJson(sb.toString(), Digest.class);
                             curDigest.addAll(digest.getBirths());
                             curDigest.addAll(digest.getEvents());
                             curDigest.addAll(digest.getDeaths());
-//                            mPagerAdapter.clearPrev();
-//                            for(int i = 0; i< 10; i++) {
-//
-//                            }
+                            mPagerAdapter.notifyDataSetChanged();
+                            arr3.setVisibility(View.GONE);
+                            arr1.setVisibility(View.GONE);
+                            arr2.setVisibility(View.GONE);
+                            customArrowAnim.stop();
+                            actionBar.setVisibility(View.VISIBLE);
+                            mPager.setVisibility(View.VISIBLE);
+                            tintWindow.setVisibility(View.GONE);
 
                         } catch (Exception e){
                             Log.d("Error", "Some Internal Error Occurred"+e.toString());
@@ -135,7 +167,6 @@ public class MainActivity extends FragmentActivity {
                     }
                 });
         requestQueue.add(request);
-        mPagerAdapter.notifyDataSetChanged();
     }
 }
 

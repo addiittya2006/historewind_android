@@ -4,19 +4,24 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
     <RelativeLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:layout_width="19.95dp"
+            android:layout_width="20dp"
             android:layout_height="20dp"
             android:id="@+id/rev"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rev"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/ic_rev"/>
 
 
     <LinearLayout
@@ -59,13 +64,13 @@
     </LinearLayout>
 
         <ImageButton
-            android:layout_width="15.865dp"
+            android:layout_width="20dp"
             android:layout_height="20dp"
             android:id="@+id/download"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/down"/>
+            android:layout_marginTop="22dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/ic_down"/>
 
     </RelativeLayout>
 
@@ -82,5 +87,38 @@
         android:paddingLeft="@dimen/card_padding"
         android:paddingRight="@dimen/card_padding"
         android:paddingStart="@dimen/card_padding" />
+
+
+    <FrameLayout
+        android:id="@+id/tint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@color/colorPrimary"
+        android:alpha="0.8">
+
+    <ImageView
+        android:id="@+id/arr1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/rtria"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/arr2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btria"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/arr3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/gtria"
+        android:visibility="gone"/>
+
+    </FrameLayout>
+
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

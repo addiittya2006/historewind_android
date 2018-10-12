@@ -49,8 +49,7 @@ public class EventFragment extends Fragment {
     }
 
     public static Fragment getInstance() {
-        Fragment fragment = new EventFragment();
-        return fragment;
+        return new EventFragment();
     }
 
     public HistoryEvent getHistoryEvent() {

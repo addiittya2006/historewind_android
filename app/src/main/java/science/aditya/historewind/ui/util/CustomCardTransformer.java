@@ -35,7 +35,6 @@ public class CustomCardTransformer implements ViewPager.OnPageChangeListener, Vi
                 currentCard.animate().scaleX(1.1f);
             }
         }
-
         mScalingEnabled = enable;
     }
 
