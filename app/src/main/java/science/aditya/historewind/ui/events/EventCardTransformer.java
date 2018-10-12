@@ -1,4 +1,4 @@
-package science.aditya.historewind.ui.util;
+package science.aditya.historewind.ui.events;
 
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -8,14 +8,14 @@ import science.aditya.historewind.ui.events.EventCard;
 import science.aditya.historewind.ui.events.EventPagerAdapter;
 
 
-public class CustomCardTransformer implements ViewPager.OnPageChangeListener, ViewPager.PageTransformer {
+public class EventCardTransformer implements ViewPager.OnPageChangeListener, ViewPager.PageTransformer {
 
     private ViewPager mViewPager;
     private EventPagerAdapter mAdapter;
     private float mLastOffset;
     private boolean mScalingEnabled;
 
-    public CustomCardTransformer(ViewPager viewPager, EventPagerAdapter adapter) {
+    public EventCardTransformer(ViewPager viewPager, EventPagerAdapter adapter) {
         mViewPager = viewPager;
         viewPager.addOnPageChangeListener(this);
         mAdapter = adapter;

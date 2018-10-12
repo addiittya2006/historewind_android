@@ -15,6 +15,11 @@ public class Event implements HistoryEvent {
     @SerializedName("desc")
     @Expose
     private String desc;
+    private int eventType;
+
+    public int getEventType() {
+        return 2;
+    }
 
     public String getYear() {
         return year;

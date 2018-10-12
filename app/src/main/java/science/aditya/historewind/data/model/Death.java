@@ -15,6 +15,11 @@ public class Death implements HistoryEvent {
     @SerializedName("desc")
     @Expose
     private String desc;
+    private int eventType;
+
+    public int getEventType() {
+        return 3;
+    }
 
     public String getYear() {
         return year;

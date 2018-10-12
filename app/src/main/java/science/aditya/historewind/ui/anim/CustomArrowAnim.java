@@ -111,7 +111,15 @@ public class CustomArrowAnim {
             }
         });
 
-        final ValueAnimator arr3Animator = ObjectAnimator.ofFloat(arrow3, "x", arrow3.getX() - 50, (screenWidth / 2.2f) + 10f, (screenWidth / 2.2f) + 25f, (screenWidth / 2.2f) + 50f//,(screenWidth / 2.2f) +55f//,(screenWidth / 2.2f) +80f//,(screenWidth / 2.2f) +25f,(screenWidth / 2.2f) +30f
+        final ValueAnimator arr3Animator = ObjectAnimator.ofFloat(arrow3, "x",
+                arrow3.getX() - 50
+                , (screenWidth / 2.2f) + 10f
+                , (screenWidth / 2.2f) + 25f
+                , (screenWidth / 2.2f) + 50f
+                //,(screenWidth / 2.2f) +55f
+                //, (screenWidth / 2.2f) +80f
+                //, (screenWidth / 2.2f) +25f
+                //, (screenWidth / 2.2f) +30f
                 , screenWidth * .94f, screenWidth + 5);
 
         arr3Animator.setDuration(6500);

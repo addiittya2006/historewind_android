@@ -23,6 +23,7 @@ public class EventFragment extends Fragment {
     private String year;
     private String desc;
     private String thumb;
+    private int type;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,9 +33,22 @@ public class EventFragment extends Fragment {
         eventCardView = (CardView) rootView.findViewById(R.id.eventCard);
 
         if(historyEvent!= null) {
+
+            type = historyEvent.getEventType();
+            String toAdd = "--";
+
+            if (type == 1){
+                toAdd = "birth";
+            } else if (type == 2) {
+                toAdd = "event";
+            } else if (type == 3) {
+                toAdd = "death";
+            }
+
             year = historyEvent.getYear();
+            String added = year+"###"+toAdd;
             TextView yearTextView = (TextView) rootView.findViewById(R.id.yearTextView);
-            yearTextView.setText(year);
+            yearTextView.setText(added);
 
             desc = historyEvent.getDesc();
             TextView descTextView = (TextView) rootView.findViewById(R.id.descTextView);

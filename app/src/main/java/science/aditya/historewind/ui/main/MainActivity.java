@@ -28,16 +28,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import science.aditya.historewind.R;
 import science.aditya.historewind.data.model.Digest;
-import science.aditya.historewind.data.model.Event;
 import science.aditya.historewind.data.model.HistoryEvent;
 import science.aditya.historewind.ui.anim.CustomArrowAnim;
-import science.aditya.historewind.ui.events.EventFragment;
+import science.aditya.historewind.ui.events.EventCardTransformer;
 import science.aditya.historewind.ui.events.EventPagerAdapter;
-import science.aditya.historewind.ui.util.CustomCardTransformer;
+import science.aditya.historewind.util.DateUtil;
 
 
 /**
@@ -56,7 +57,7 @@ public class MainActivity extends FragmentActivity {
     private FrameLayout tintWindow;
     private Digest digest;
 
-    private final String BASE_URL = "https://history.aditya.science/September_12/morn_digest.json";
+    private final String BASE_URL = "https://history.aditya.science/";
 
     private RequestQueue requestQueue;
 
@@ -90,16 +91,17 @@ public class MainActivity extends FragmentActivity {
         mPager.setAdapter(mPagerAdapter);
         mPager.setVisibility(View.GONE);
 
-        CustomCardTransformer customCardTransformer = new CustomCardTransformer(mPager, mPagerAdapter);
-        customCardTransformer.enableScaling(true);
+        EventCardTransformer eventCardTransformer = new EventCardTransformer(mPager, mPagerAdapter);
+        eventCardTransformer.enableScaling(true);
 
         ViewPager mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setPageTransformer(false, customCardTransformer);
+        mPager.setPageTransformer(false, eventCardTransformer);
         mPager.setOffscreenPageLimit(3);
 
-
+        DateUtil du = new DateUtil();
+        String curDate = du.getMonth()+"_"+Integer.toString(du.getDate());
         requestQueue = Volley.newRequestQueue(this);
-        fetchDigest();
+        fetchDigest(curDate, du.getTod());
     }
 
     @Override
@@ -112,18 +114,25 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    private void fetchDigest() {
+    private void fetchDigest(String date, int tod) {
+        String digestType;
+        if (tod==1){
+            digestType = "eve_digest.json";
+        } else {
+            digestType = "morn_digest.json";
+        }
+        String curURL = BASE_URL+date+"/"+digestType;
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET, BASE_URL,null,
+                Request.Method.GET, curURL,null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         FileOutputStream outputStream;
                         FileInputStream cachedDigest = null;
-                        try{
-                            cachedDigest = openFileInput("current.digest");
-                        } catch (FileNotFoundException fnfe) {
-                            Log.d("fiel", "File not found");
+//                        try{
+//                            cachedDigest = openFileInput("current.digest");
+//                        } catch (FileNotFoundException fnfe) {
+//                            Log.d("fiel", "File not found");
                         try {
                             outputStream = openFileOutput("current.digest", Context.MODE_PRIVATE);
                             outputStream.write(jsonObject.toString().getBytes());
@@ -132,7 +141,7 @@ public class MainActivity extends FragmentActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
+//                    }
                         try {
                             BufferedReader br = new BufferedReader(new InputStreamReader(cachedDigest, "UTF-8"));
                             StringBuilder sb = new StringBuilder();
