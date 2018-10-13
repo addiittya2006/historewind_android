@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -74,7 +76,7 @@ public class MainActivity extends FragmentActivity {
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         screenWidth = displaymetrics.widthPixels;
 
-        actionBar = (RelativeLayout) findViewById(R.id.bar);
+        actionBar = (RelativeLayout) findViewById(R.id.datebar);
         actionBar.setVisibility(View.GONE);
 
         tintWindow = (FrameLayout) findViewById(R.id.tint);
@@ -84,7 +86,7 @@ public class MainActivity extends FragmentActivity {
         arr3 = (ImageView) findViewById(R.id.arr3);
 
         customArrowAnim = new CustomArrowAnim(screenWidth, arr1, arr2, arr3);
-        customArrowAnim.start();
+//        customArrowAnim.start();
 
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new EventPagerAdapter(getSupportFragmentManager(), 2 * (getResources().getDisplayMetrics().density), curDigest);
@@ -100,6 +102,11 @@ public class MainActivity extends FragmentActivity {
 
         DateUtil du = new DateUtil();
         String curDate = du.getMonth()+"_"+Integer.toString(du.getDate());
+        String tvCurDate = du.getMonth()+" "+Integer.toString(du.getDate());
+
+        TextView curDateTv = (TextView) findViewById(R.id.curDate);
+        curDateTv.setText(tvCurDate);
+
         requestQueue = Volley.newRequestQueue(this);
         fetchDigest(curDate, du.getTod());
     }
@@ -114,14 +121,14 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    private void fetchDigest(String date, int tod) {
-        String digestType;
+    private void fetchDigest(final String date, int tod) {
+        final String digestType;
         if (tod==1){
-            digestType = "eve_digest.json";
+            digestType = "eve";
         } else {
-            digestType = "morn_digest.json";
+            digestType = "morn";
         }
-        String curURL = BASE_URL+date+"/"+digestType;
+        String curURL = BASE_URL+date+"/"+digestType+"_digest.json";
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, curURL,null,
                 new Response.Listener<JSONObject>() {
@@ -129,19 +136,19 @@ public class MainActivity extends FragmentActivity {
                     public void onResponse(JSONObject jsonObject) {
                         FileOutputStream outputStream;
                         FileInputStream cachedDigest = null;
-//                        try{
-//                            cachedDigest = openFileInput("current.digest");
-//                        } catch (FileNotFoundException fnfe) {
-//                            Log.d("fiel", "File not found");
+                        try{
+                            cachedDigest = openFileInput(date+"_"+digestType+".digest");
+                        } catch (FileNotFoundException fnfe) {
+                            Log.d("fiel", "File not found");
                         try {
-                            outputStream = openFileOutput("current.digest", Context.MODE_PRIVATE);
+                            outputStream = openFileOutput(date+"_"+digestType+".digest", Context.MODE_PRIVATE);
                             outputStream.write(jsonObject.toString().getBytes());
                             outputStream.close();
-                            cachedDigest = openFileInput("current.digest");
+                            cachedDigest = openFileInput(date+"_"+digestType+".digest");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-//                    }
+                    }
                         try {
                             BufferedReader br = new BufferedReader(new InputStreamReader(cachedDigest, "UTF-8"));
                             StringBuilder sb = new StringBuilder();
@@ -160,7 +167,7 @@ public class MainActivity extends FragmentActivity {
                             arr3.setVisibility(View.GONE);
                             arr1.setVisibility(View.GONE);
                             arr2.setVisibility(View.GONE);
-                            customArrowAnim.stop();
+//                            customArrowAnim.stop();
                             actionBar.setVisibility(View.VISIBLE);
                             mPager.setVisibility(View.VISIBLE);
                             tintWindow.setVisibility(View.GONE);

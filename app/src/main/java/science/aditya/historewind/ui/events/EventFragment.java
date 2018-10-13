@@ -1,12 +1,20 @@
 package science.aditya.historewind.ui.events;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
+import org.w3c.dom.Text;
 
 import science.aditya.historewind.R;
 import science.aditya.historewind.data.model.Event;
@@ -36,23 +44,39 @@ public class EventFragment extends Fragment {
 
             type = historyEvent.getEventType();
             String toAdd = "--";
+            int colour = Color.parseColor("#FFFFFF");
 
             if (type == 1){
-                toAdd = "birth";
+                toAdd = "Birth";
+                colour = Color.parseColor("#3E50B4");
             } else if (type == 2) {
-                toAdd = "event";
+                toAdd = "Event";
+                colour = Color.parseColor("#D0021B");
             } else if (type == 3) {
-                toAdd = "death";
+                toAdd = "Death";
+                colour = Color.parseColor("#757575");
             }
 
             year = historyEvent.getYear();
-            String added = year+"###"+toAdd;
+//            String added = year;
             TextView yearTextView = (TextView) rootView.findViewById(R.id.yearTextView);
-            yearTextView.setText(added);
+            yearTextView.setText(year);
+
+            thumb = historyEvent.getThumb();
+            ImageView eventImage = (ImageView) rootView.findViewById(R.id.eventImage);
+            Glide.with(this)
+                    .load(thumb)
+                    .apply(RequestOptions.placeholderOf(R.drawable.wikimg))
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(eventImage);
 
             desc = historyEvent.getDesc();
             TextView descTextView = (TextView) rootView.findViewById(R.id.descTextView);
-            descTextView.setText(desc);
+            descTextView.setText(Html.fromHtml(desc).toString());
+
+            TextView typeTextView = (TextView) rootView.findViewById(R.id.typeTextView);
+            typeTextView.setText(toAdd);
+            typeTextView.setBackgroundColor(colour);
         }
         eventCardView.setMaxCardElevation(eventCardView.getCardElevation() * EventCard.MAX_ELEVATION_FACTOR);
         return rootView;
