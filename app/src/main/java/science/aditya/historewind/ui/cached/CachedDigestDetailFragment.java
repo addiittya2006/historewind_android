@@ -9,8 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -82,12 +85,21 @@ public class CachedDigestDetailFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_cache_digest, parent, false);
 
+        TextView headerView = (TextView) getActivity().findViewById(R.id.headingView);
+        String setText;
+        if(tod == 0) {
+            setText = month+Integer.toString(date)+", Morning";
+        } else {
+            setText = month+Integer.toString(date)+", Evening";
+        }
+        headerView.setText(setText);
+
         rv = rootView.findViewById(R.id.digestRV);
 
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setHasFixedSize(true);
 
-        rv.setAdapter(new PrevDigestAdapter(prevDigest));
+        rv.setAdapter(new PrevDigestAdapter(getContext(), prevDigest));
         return rootView;
     }
 

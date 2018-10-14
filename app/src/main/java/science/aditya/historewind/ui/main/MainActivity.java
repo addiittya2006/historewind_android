@@ -2,8 +2,12 @@ package science.aditya.historewind.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -25,7 +29,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import science.aditya.historewind.R;
 import science.aditya.historewind.data.api.EventFetchUtil;
@@ -53,6 +59,7 @@ public class MainActivity extends FragmentActivity {
     private CustomArrowAnim customArrowAnim;
     private FrameLayout tintWindow;
     private Digest digest;
+    private Set<String> cached ;
 
     private final String BASE_URL = "https://history.aditya.science/";
 
@@ -74,14 +81,19 @@ public class MainActivity extends FragmentActivity {
         actionBar = (RelativeLayout) findViewById(R.id.datebar);
         actionBar.setVisibility(View.GONE);
 
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = prefs.edit();
+//        editor.putStringSet("cached", new HashSet<String>());
+//        editor.apply();
+
         tintWindow = (FrameLayout) findViewById(R.id.tint);
 
-        arr1 = (ImageView) findViewById(R.id.arr1);
-        arr2 = (ImageView) findViewById(R.id.arr2);
-        arr3 = (ImageView) findViewById(R.id.arr3);
-
-        customArrowAnim = new CustomArrowAnim(screenWidth, arr1, arr2, arr3);
 //        TODO: implement arrow animator
+//        arr1 = (ImageView) findViewById(R.id.arr1);
+//        arr2 = (ImageView) findViewById(R.id.arr2);
+//        arr3 = (ImageView) findViewById(R.id.arr3);
+
+//        customArrowAnim = new CustomArrowAnim(screenWidth, arr1, arr2, arr3);
 //        customArrowAnim.start();
 
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -95,6 +107,19 @@ public class MainActivity extends FragmentActivity {
         ViewPager mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setPageTransformer(false, eventCardTransformer);
         mPager.setOffscreenPageLimit(3);
+
+        ConnectivityManager conMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
+                && conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
+            Intent i = new Intent(MainActivity.this, CachedDigestActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            File cacheDirectory = new File(getFilesDir().getAbsolutePath()+File.separator+"cached");
+            if(!cacheDirectory.exists()) {
+                cacheDirectory.mkdirs();
+            }
+            startActivity(i);
+        }
 
         final DateUtil du = new DateUtil();
         String curDate = du.getMonth()+"_"+Integer.toString(du.getDate());
@@ -122,17 +147,30 @@ public class MainActivity extends FragmentActivity {
 
         final ImageButton saveToCache = (ImageButton) findViewById(R.id.download);
         final ImageView doneCaching = (ImageView) findViewById(R.id.done);
+
+
+        String timeOfDay;
+        if(du.getTod() == 0){
+            timeOfDay = "morn";
+        } else {
+            timeOfDay = "eve";
+        }
+        final String path = du.getMonth()+"_"+Integer.toString(du.getDate())+"_"+timeOfDay+".digest";
+
+
+        cached = prefs.getStringSet("cached", new HashSet<String>());
+        if(cached!= null && cached.contains(path)) {
+            saveToCache.setVisibility(View.GONE);
+            doneCaching.setVisibility(View.VISIBLE);
+        } else {
+            editor.putStringSet("cached", cached);
+            editor.commit();
+        }
+
+
         saveToCache.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String timeOfDay;
-                if(du.getTod() == 0){
-                    timeOfDay = "morn";
-                } else {
-                    timeOfDay = "eve";
-                }
-                String path = du.getMonth()+"_"+Integer.toString(du.getDate())+"_"+timeOfDay+".digest";
-
                 try {
                     FileInputStream cachedDigest = openFileInput(path);
                     File cacheDirectory = new File(getFilesDir().getAbsolutePath()+File.separator+"cached");
@@ -153,6 +191,11 @@ public class MainActivity extends FragmentActivity {
                     saveFileStream.close();
                     cachedDigest.close();
 
+                    cached.add(path);
+                    editor.remove("cached").commit();
+                    editor.putStringSet("cached", cached);
+                    editor.commit();
+
                     saveToCache.setVisibility(View.GONE);
                     doneCaching.setVisibility(View.VISIBLE);
 
@@ -168,7 +211,7 @@ public class MainActivity extends FragmentActivity {
         if (mPager.getCurrentItem() == 0) {
             super.onBackPressed();
         } else {
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            mPager.setCurrentItem(0);
         }
     }
 
