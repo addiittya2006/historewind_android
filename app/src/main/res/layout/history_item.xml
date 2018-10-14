@@ -12,12 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/eventImage"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:srcCompat="@drawable/ico"
-        android:src="@drawable/ico"/>
+        <ImageView
+            android:id="@+id/eventImage"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:srcCompat="@drawable/ico"
+            android:src="@drawable/ico"/>
 
         <TextView
             android:id="@+id/yearTextView"
@@ -31,16 +31,16 @@
             android:background="@drawable/yeartextback"
             android:alpha="0.95"/>
 
-    <TextView
-        android:id="@+id/descTextView"
-        android:layout_width="400dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_height="200dp"
-        android:text="description"
-        android:textSize="17sp"
-        android:layout_below="@+id/eventImage"/>
+        <TextView
+            android:id="@+id/descTextView"
+            android:layout_width="400dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="200dp"
+            android:text="description"
+            android:textSize="17sp"
+            android:layout_below="@+id/eventImage"/>
 
         <TextView
             android:id="@+id/typeTextView"

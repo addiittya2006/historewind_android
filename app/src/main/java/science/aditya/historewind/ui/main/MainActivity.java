@@ -1,43 +1,38 @@
 package science.aditya.historewind.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import science.aditya.historewind.R;
+import science.aditya.historewind.data.api.EventFetchUtil;
 import science.aditya.historewind.data.model.Digest;
 import science.aditya.historewind.data.model.HistoryEvent;
-import science.aditya.historewind.ui.anim.CustomArrowAnim;
+import science.aditya.historewind.ui.cached.CachedDigestActivity;
+import science.aditya.historewind.ui.events.anim.CustomArrowAnim;
 import science.aditya.historewind.ui.events.EventCardTransformer;
 import science.aditya.historewind.ui.events.EventPagerAdapter;
 import science.aditya.historewind.util.DateUtil;
@@ -86,6 +81,7 @@ public class MainActivity extends FragmentActivity {
         arr3 = (ImageView) findViewById(R.id.arr3);
 
         customArrowAnim = new CustomArrowAnim(screenWidth, arr1, arr2, arr3);
+//        TODO: implement arrow animator
 //        customArrowAnim.start();
 
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -100,7 +96,7 @@ public class MainActivity extends FragmentActivity {
         mPager.setPageTransformer(false, eventCardTransformer);
         mPager.setOffscreenPageLimit(3);
 
-        DateUtil du = new DateUtil();
+        final DateUtil du = new DateUtil();
         String curDate = du.getMonth()+"_"+Integer.toString(du.getDate());
         String tvCurDate = du.getMonth()+" "+Integer.toString(du.getDate());
 
@@ -108,7 +104,63 @@ public class MainActivity extends FragmentActivity {
         curDateTv.setText(tvCurDate);
 
         requestQueue = Volley.newRequestQueue(this);
-        fetchDigest(curDate, du.getTod());
+        EventFetchUtil ef = new EventFetchUtil(mPager, actionBar, tintWindow, getApplicationContext());
+        ef.fetchDigest(requestQueue, BASE_URL, curDate, du.getTod(), mPagerAdapter, curDigest);
+
+        ImageButton reverse = (ImageButton) findViewById(R.id.rev);
+        reverse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, CachedDigestActivity.class);
+                File cacheDirectory = new File(getFilesDir().getAbsolutePath()+File.separator+"cached");
+                if(!cacheDirectory.exists()) {
+                    cacheDirectory.mkdirs();
+                }
+                startActivity(i);
+            }
+        });
+
+        final ImageButton saveToCache = (ImageButton) findViewById(R.id.download);
+        final ImageView doneCaching = (ImageView) findViewById(R.id.done);
+        saveToCache.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String timeOfDay;
+                if(du.getTod() == 0){
+                    timeOfDay = "morn";
+                } else {
+                    timeOfDay = "eve";
+                }
+                String path = du.getMonth()+"_"+Integer.toString(du.getDate())+"_"+timeOfDay+".digest";
+
+                try {
+                    FileInputStream cachedDigest = openFileInput(path);
+                    File cacheDirectory = new File(getFilesDir().getAbsolutePath()+File.separator+"cached");
+                    if(!cacheDirectory.exists()) {
+                        cacheDirectory.mkdirs();
+                    }
+                    File saveFile = new File( cacheDirectory.getAbsolutePath()+File.separator+path);
+                    if(!saveFile.exists()){
+                        saveFile.createNewFile();
+                    }
+                    FileOutputStream saveFileStream = new FileOutputStream(saveFile, false);
+
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = cachedDigest.read(buffer)) != -1) {
+                        saveFileStream.write(buffer, 0, read);
+                    }
+                    saveFileStream.close();
+                    cachedDigest.close();
+
+                    saveToCache.setVisibility(View.GONE);
+                    doneCaching.setVisibility(View.VISIBLE);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -120,70 +172,6 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-
-    private void fetchDigest(final String date, int tod) {
-        final String digestType;
-        if (tod==1){
-            digestType = "eve";
-        } else {
-            digestType = "morn";
-        }
-        String curURL = BASE_URL+date+"/"+digestType+"_digest.json";
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET, curURL,null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        FileOutputStream outputStream;
-                        FileInputStream cachedDigest = null;
-                        try{
-                            cachedDigest = openFileInput(date+"_"+digestType+".digest");
-                        } catch (FileNotFoundException fnfe) {
-                            Log.d("fiel", "File not found");
-                        try {
-                            outputStream = openFileOutput(date+"_"+digestType+".digest", Context.MODE_PRIVATE);
-                            outputStream.write(jsonObject.toString().getBytes());
-                            outputStream.close();
-                            cachedDigest = openFileInput(date+"_"+digestType+".digest");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                        try {
-                            BufferedReader br = new BufferedReader(new InputStreamReader(cachedDigest, "UTF-8"));
-                            StringBuilder sb = new StringBuilder();
-                            String line;
-                            while(( line = br.readLine()) != null ) {
-                                sb.append( line );
-                                sb.append( '\n' );
-                            }
-
-                            Gson gson = new Gson();
-                            digest = gson.fromJson(sb.toString(), Digest.class);
-                            curDigest.addAll(digest.getBirths());
-                            curDigest.addAll(digest.getEvents());
-                            curDigest.addAll(digest.getDeaths());
-                            mPagerAdapter.notifyDataSetChanged();
-                            arr3.setVisibility(View.GONE);
-                            arr1.setVisibility(View.GONE);
-                            arr2.setVisibility(View.GONE);
-//                            customArrowAnim.stop();
-                            actionBar.setVisibility(View.VISIBLE);
-                            mPager.setVisibility(View.VISIBLE);
-                            tintWindow.setVisibility(View.GONE);
-
-                        } catch (Exception e){
-                            Log.d("Error", "Some Internal Error Occurred"+e.toString());
-                        }
-                    }},
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Log.i("", "Not connected");
-                    }
-                });
-        requestQueue.add(request);
-    }
 }
 
 

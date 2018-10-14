@@ -1,4 +1,4 @@
-package science.aditya.historewind.ui.anim;
+package science.aditya.historewind.ui.events.anim;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
