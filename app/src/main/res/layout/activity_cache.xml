@@ -5,8 +5,32 @@
     android:layout_height="match_parent">
 
     <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:src="@drawable/header_logo"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/headingView"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:text="Offline Digests"
+        android:gravity="center_horizontal"
+        android:paddingBottom="2dp"/>
+
+    <FrameLayout
         android:id="@+id/fragContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="fill_parent"/>
 
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ import science.aditya.historewind.data.model.DateDigest;
 
 public class CachedDigestListFragment extends Fragment {
 
-    ArrayAdapter<DateDigest> listAdapter;
+//    ArrayAdapter<DateDigest> listAdapter;
+    CachedDigestListAdapter listAdapter;
     List<DateDigest> fileList = new ArrayList<>();
 
     @Override
@@ -47,7 +49,7 @@ public class CachedDigestListFragment extends Fragment {
             }
         }
 
-        listAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, fileList);
+        listAdapter = new CachedDigestListAdapter(getContext(), fileList);
 
     }
 
@@ -55,16 +57,25 @@ public class CachedDigestListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
         // Inflate the xml file for the fragment
         View rootView = inflater.inflate(R.layout.fragment_cache_list, parent, false);
-        ListView lvItems = (ListView) rootView.findViewById(R.id.digestList);
-        lvItems.setAdapter(listAdapter);
 
-        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DateDigest dd = fileList.get(position);
-                listener.onItemSelected(dd.getMonth(), dd.getDate(), dd.getTod());
-            }
-        });
+        TextView headerView = (TextView) getActivity().findViewById(R.id.headingView);
+        headerView.setText("Offline Digests");
+        TextView noDigestView = (TextView) getActivity().findViewById(R.id.noDigestView);
+        ListView lvItems = (ListView) rootView.findViewById(R.id.digestList);
+
+        if (fileList.size()>0) {
+            lvItems.setAdapter(listAdapter);
+            lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    DateDigest dd = fileList.get(position);
+                    listener.onItemSelected(dd.getMonth(), dd.getDate(), dd.getTod());
+                }
+            });
+        } else {
+           lvItems.setVisibility(View.GONE);
+           noDigestView.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
