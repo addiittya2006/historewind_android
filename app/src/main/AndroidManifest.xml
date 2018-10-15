@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.main.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +25,9 @@
         </activity>
 
 
-        <activity android:name=".ui.cached.CachedDigestActivity"></activity>
+        <activity
+            android:name=".ui.cached.CachedDigestActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

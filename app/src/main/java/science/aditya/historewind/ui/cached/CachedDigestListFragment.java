@@ -60,7 +60,7 @@ public class CachedDigestListFragment extends Fragment {
 
         TextView headerView = (TextView) getActivity().findViewById(R.id.headingView);
         headerView.setText("Offline Digests");
-        TextView noDigestView = (TextView) getActivity().findViewById(R.id.noDigestView);
+        TextView noDigestView = (TextView) rootView.findViewById(R.id.noDigestView);
         ListView lvItems = (ListView) rootView.findViewById(R.id.digestList);
 
         if (fileList.size()>0) {
@@ -99,6 +99,5 @@ public class CachedDigestListFragment extends Fragment {
     public interface OnItemSelectedListener {
         void onItemSelected(String month, String date, int tod);
     }
-
 
 }

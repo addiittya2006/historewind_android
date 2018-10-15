@@ -6,52 +6,81 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="2dp">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/eventImage"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:srcCompat="@drawable/ico"
-            android:src="@drawable/ico"/>
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toTopOf="@+id/typeTextView"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ScrollView
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/eventImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:src="@drawable/ico"
+                        android:layout_alignParentTop="true"/>
+
+                    <TextView
+                        android:id="@+id/descTextView"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_height="wrap_content"
+                        android:text="description"
+                        android:textSize="14sp"
+                        android:layout_below="@+id/eventImage"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_below="@+id/descTextView"/>
+
+                </RelativeLayout>
+
+            </ScrollView>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/yearTextView"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:text="Year"
             android:gravity="center"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:textSize="50sp"
+            android:textSize="33sp"
             android:background="@drawable/yeartextback"
+            app:layout_constraintTop_toTopOf="parent"
             android:alpha="0.95"/>
 
         <TextView
-            android:id="@+id/descTextView"
-            android:layout_width="400dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_height="200dp"
-            android:text="description"
-            android:textSize="17sp"
-            android:layout_below="@+id/eventImage"/>
-
-        <TextView
             android:id="@+id/typeTextView"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textStyle="italic"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@+id/descTextView"
-            android:textColor="@color/colorPrimary"/>
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:layout_height="40dp"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
