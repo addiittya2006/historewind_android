@@ -10,3 +10,5 @@
 .externalNativeBuild
 back_ignore/
 keystore.properties
+gradlew
+gradlew.bat
