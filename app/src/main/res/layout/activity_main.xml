@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <RelativeLayout
             android:id="@+id/datebar"
@@ -20,14 +19,13 @@
                 android:layout_height="wrap_content">
 
                 <ImageButton
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:id="@+id/rev"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="22dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="18dp"
                     android:background="@drawable/ic_rev"/>
-
 
                 <LinearLayout
                     android:id="@+id/logo"
@@ -41,8 +39,8 @@
                     <!--42.51-->
                     <ImageView
                         android:id="@+id/hist"
-                        android:layout_width="170.04dp"
-                        android:layout_height="40dp"
+                        android:layout_width="127.53dp"
+                        android:layout_height="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:src="@drawable/histore"/>
@@ -50,8 +48,8 @@
                     <!--9.23-->
                     <ImageView
                         android:id="@+id/rew"
-                        android:layout_width="36.92dp"
-                        android:layout_height="40dp"
+                        android:layout_width="27.69dp"
+                        android:layout_height="30dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginLeft="3dp"
                         android:layout_marginRight="5dp"
@@ -60,8 +58,8 @@
                     <!--17.91-->
                     <ImageView
                         android:id="@+id/ind"
-                        android:layout_width="71.64dp"
-                        android:layout_height="40dp"
+                        android:layout_width="53.73dp"
+                        android:layout_height="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:src="@drawable/ind"/>
@@ -69,24 +67,23 @@
                 </LinearLayout>
 
                 <ImageButton
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:id="@+id/download"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="22dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="18dp"
                     android:background="@drawable/ic_down"/>
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:id="@+id/done"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="22dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="18dp"
                     android:background="@drawable/ic_done"
                     android:visibility="gone"/>
-
 
             </RelativeLayout>
 
@@ -94,7 +91,7 @@
                 android:id="@+id/curDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="14sp"
                 android:gravity="center"
                 android:layout_below="@+id/bar" />
 
@@ -103,16 +100,19 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="650dp"
+            android:layout_height="fill_parent"
             android:layout_gravity="bottom"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:paddingTop="10dp"
-            android:paddingBottom="@dimen/card_padding"
+            android:paddingTop="40dp"
+            android:paddingBottom="40dp"
             android:paddingEnd="@dimen/card_padding"
             android:paddingLeft="@dimen/card_padding"
             android:paddingRight="@dimen/card_padding"
-            android:paddingStart="@dimen/card_padding" />
+            android:paddingStart="@dimen/card_padding"
+            android:layout_below="@+id/datebar"/>
+
+    </RelativeLayout>
 
 
         <FrameLayout
@@ -144,7 +144,5 @@
                 android:visibility="gone"/>
 
         </FrameLayout>
-
-    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

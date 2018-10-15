@@ -83,8 +83,6 @@ public class MainActivity extends FragmentActivity {
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = prefs.edit();
-//        editor.putStringSet("cached", new HashSet<String>());
-//        editor.apply();
 
         tintWindow = (FrameLayout) findViewById(R.id.tint);
 
