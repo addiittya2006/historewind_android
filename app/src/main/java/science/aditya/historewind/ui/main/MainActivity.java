@@ -3,6 +3,7 @@ package science.aditya.historewind.ui.main;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -10,24 +11,19 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,14 +31,11 @@ import java.util.Set;
 
 import science.aditya.historewind.R;
 import science.aditya.historewind.data.api.EventFetchUtil;
-import science.aditya.historewind.data.model.Digest;
 import science.aditya.historewind.data.model.HistoryEvent;
 import science.aditya.historewind.ui.cached.CachedDigestActivity;
-import science.aditya.historewind.ui.events.anim.CustomArrowAnim;
-import science.aditya.historewind.ui.events.EventCardTransformer;
 import science.aditya.historewind.ui.events.EventPagerAdapter;
+import science.aditya.historewind.ui.events.EventPagerTransformer;
 import science.aditya.historewind.util.DateUtil;
-
 
 /**
  * Created by addiittya on 13/03/17.
@@ -53,13 +46,12 @@ public class MainActivity extends FragmentActivity {
     private ViewPager mPager;
     private EventPagerAdapter mPagerAdapter;
     private List<HistoryEvent> curDigest = new ArrayList<>();
-    private int screenWidth;
+//    private int screenWidth;
     private RelativeLayout actionBar;
-    private ImageView arr1, arr2, arr3;
-    private CustomArrowAnim customArrowAnim;
+//    private ImageView arr1, arr2, arr3;
+//    private CustomArrowAnim customArrowAnim;
     private FrameLayout tintWindow;
-    private Digest digest;
-    private Set<String> cached ;
+    private Set<String> cached;
 
     private final String BASE_URL = "https://history.aditya.science/";
 
@@ -74,9 +66,9 @@ public class MainActivity extends FragmentActivity {
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
 
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        screenWidth = displaymetrics.widthPixels;
+//        DisplayMetrics displaymetrics = new DisplayMetrics();
+//        this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+//        screenWidth = displaymetrics.widthPixels;
 
         actionBar = (RelativeLayout) findViewById(R.id.datebar);
         actionBar.setVisibility(View.GONE);
@@ -95,16 +87,23 @@ public class MainActivity extends FragmentActivity {
 //        customArrowAnim.start();
 
         mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new EventPagerAdapter(getSupportFragmentManager(), 2 * (getResources().getDisplayMetrics().density), curDigest);
+
+        float density = getResources().getDisplayMetrics().density;
+        float pagerMargin = 32*density;
+        float pageMargin = 8*density;
+
+        Point screen = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screen);
+
+        float pagerDrawOffset = (pagerMargin)/(screen.x - 2*pagerMargin);
+        EventPagerTransformer eventPagerTransformer = new EventPagerTransformer(pagerDrawOffset);
+
+        mPagerAdapter = new EventPagerAdapter(getSupportFragmentManager(), curDigest);
         mPager.setAdapter(mPagerAdapter);
+        mPager.setPageMargin((int) pageMargin);
+        mPager.setPageTransformer(false, eventPagerTransformer);
+
         mPager.setVisibility(View.GONE);
-
-        EventCardTransformer eventCardTransformer = new EventCardTransformer(mPager, mPagerAdapter);
-        eventCardTransformer.enableScaling(true);
-
-        ViewPager mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setPageTransformer(false, eventCardTransformer);
-        mPager.setOffscreenPageLimit(3);
 
         ConnectivityManager conMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 

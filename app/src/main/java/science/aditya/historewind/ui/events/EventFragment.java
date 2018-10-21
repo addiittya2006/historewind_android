@@ -26,7 +26,6 @@ import science.aditya.historewind.data.model.HistoryEvent;
 
 public class EventFragment extends Fragment {
 
-    private CardView eventCardView;
     HistoryEvent historyEvent;
     private String year;
     private String desc;
@@ -38,7 +37,6 @@ public class EventFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.history_item, container, false);
-        eventCardView = (CardView) rootView.findViewById(R.id.eventCard);
 
         if(historyEvent!= null) {
 
@@ -58,7 +56,6 @@ public class EventFragment extends Fragment {
             }
 
             year = historyEvent.getYear();
-//            String added = year;
             TextView yearTextView = (TextView) rootView.findViewById(R.id.yearTextView);
             yearTextView.setText(year);
 
@@ -78,12 +75,7 @@ public class EventFragment extends Fragment {
             typeTextView.setText(toAdd);
             typeTextView.setBackgroundColor(colour);
         }
-        eventCardView.setMaxCardElevation(eventCardView.getCardElevation() * EventCard.MAX_ELEVATION_FACTOR);
         return rootView;
-    }
-
-    public CardView getCardView() {
-        return eventCardView;
     }
 
     public static Fragment getInstance() {

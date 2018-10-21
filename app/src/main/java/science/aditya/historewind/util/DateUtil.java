@@ -13,15 +13,14 @@ public class DateUtil {
     }
 
     public String getMonth() {
-        return setMonth(cal.get(Calendar.MONTH));
+        return getStringMonth(cal.get(Calendar.MONTH));
     }
 
     public int getDate() {
         return cal.get(Calendar.DAY_OF_MONTH);
     }
 
-
-    public static String setMonth(int month) {
+    String getStringMonth(int month) {
         HashMap<String, String> map = new HashMap<>();
 
         map.put("0", "January");
