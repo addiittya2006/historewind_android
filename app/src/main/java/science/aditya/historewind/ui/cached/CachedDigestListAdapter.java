@@ -60,6 +60,10 @@ public class CachedDigestListAdapter extends ArrayAdapter<DateDigest> {
             viewHolder = new DigestListViewHolder();
             viewHolder.digestDate = (TextView) row.findViewById(R.id.lvDateView);
             viewHolder.digestImage = (ImageView) row.findViewById(R.id.lvImgView);
+        } else {
+            viewHolder = new DigestListViewHolder();
+            viewHolder.digestDate = (TextView) row.findViewById(R.id.lvDateView);
+            viewHolder.digestImage = (ImageView) row.findViewById(R.id.lvImgView);
         }
 
         DateDigest dd = getItem(position);

@@ -1,11 +1,15 @@
 package science.aditya.historewind.ui.cached;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,11 +33,39 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
         if (savedInstanceState == null) {
 
             CachedDigestListFragment listFragment = new CachedDigestListFragment();
-
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(R.id.fragContainer, listFragment);
-
             ft.commit();
+
+        } else {
+
+            CachedDigestListFragment listFragment = new CachedDigestListFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.fragContainer, listFragment);
+            ft.commit();
+
+            String mMonth = savedInstanceState.getString("month");
+            int mDate = savedInstanceState.getInt("date");
+            int mTod = savedInstanceState.getInt("tod");
+            if(mMonth!=null) {
+                CachedDigestDetailFragment detailFragment = new CachedDigestDetailFragment();
+                Bundle args = new Bundle();
+                args.putString("month", mMonth);
+                args.putInt("date", mDate);
+                args.putInt("tod", mTod);
+                detailFragment.setArguments(args);
+
+
+                FragmentTransaction lft = getSupportFragmentManager().beginTransaction();
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    getSupportFragmentManager().popBackStack();
+                    lft.add(R.id.fragDetailContainer, detailFragment);
+                    lft.commit();
+                } else {
+                    lft.add(R.id.fragContainer, detailFragment).addToBackStack(null);
+                    lft.commit();
+                }
+            }
         }
 
         ImageView backButton = (ImageView) findViewById(R.id.back_button);
@@ -43,16 +75,6 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
                 CachedDigestActivity.super.onBackPressed();
             }
         });
-//        TODO: implement landscape mode
-//        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-//            CachedDigestDetailFragment detailFragment = new CachedDigestDetailFragment();
-//            Bundle args = new Bundle();
-//            args.putInt("position", 0);
-//            detailFragment.setArguments(args);
-//            FragmentTransaction lft = getSupportFragmentManager().beginTransaction();
-//            lft.add(R.id., secondFragment);
-//            lft.commit();
-//        }
     }
 
     @Override
@@ -63,7 +85,7 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
                 && conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
             finish();
         }
-        }
+    }
 
     @Override
     public void onItemSelected(String month, String date, int tod) {
@@ -75,21 +97,40 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
         args.putInt("tod", tod);
         detailFragment.setArguments(args);
 
-//        TODO: implement landscape mode
-//        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id., secondFragment)
-//                    .addToBackStack(null)
-//                    .commit();
-//        }else{
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragDetailContainer, detailFragment)
+                    .commit();
+        }else{
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragContainer, detailFragment)
                     .addToBackStack(null)
                     .commit();
-//        }
+        }
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragDetailContainer);
+            if(fragment!=null&&fragment.isVisible()) {
+                outState.putString("month", fragment.getArguments().getString("month"));
+                outState.putInt("date", fragment.getArguments().getInt("date"));
+                outState.putInt("tod", fragment.getArguments().getInt("tod"));
+            }
+        }else{
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
+            if(fragment!=null&&fragment.isVisible()&&fragment instanceof CachedDigestDetailFragment) {
+                outState.putString("month", fragment.getArguments().getString("month"));
+                outState.putInt("date", fragment.getArguments().getInt("date"));
+                outState.putInt("tod", fragment.getArguments().getInt("tod"));
+            }
+        }
+
+    }
 }

@@ -13,50 +13,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="@+id/typeTextView"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ScrollView
-                android:layout_alignParentTop="true"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/eventImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:src="@drawable/ico"
+                    android:layout_alignParentTop="true"/>
 
-                    <ImageView
-                        android:id="@+id/eventImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:src="@drawable/ico"
-                        android:layout_alignParentTop="true"/>
+                <TextView
+                    android:id="@+id/descTextView"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_height="wrap_content"
+                    android:text="description"
+                    android:textSize="16sp"
+                    android:layout_below="@+id/eventImage"/>
 
-                    <TextView
-                        android:id="@+id/descTextView"
-                        android:layout_width="match_parent"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="15dp"
-                        android:layout_height="wrap_content"
-                        android:text="description"
-                        android:textSize="14sp"
-                        android:layout_below="@+id/eventImage"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/descTextView"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_below="@+id/descTextView"/>
+            </RelativeLayout>
 
-                </RelativeLayout>
-
-            </ScrollView>
-
-        </RelativeLayout>
+        </ScrollView>
 
         <TextView
             android:id="@+id/yearTextView"
@@ -66,7 +58,7 @@
             android:gravity="center"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:textSize="33sp"
+            android:textSize="32sp"
             android:background="@drawable/yeartextback"
             app:layout_constraintTop_toTopOf="parent"
             android:alpha="0.95"/>

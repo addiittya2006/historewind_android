@@ -88,9 +88,9 @@ public class CachedDigestDetailFragment extends Fragment {
         TextView headerView = (TextView) getActivity().findViewById(R.id.headingView);
         String setText;
         if(tod == 0) {
-            setText = month+Integer.toString(date)+", Morning";
+            setText = month+" "+Integer.toString(date)+", Morning";
         } else {
-            setText = month+Integer.toString(date)+", Evening";
+            setText = month+" "+Integer.toString(date)+", Evening";
         }
         headerView.setText(setText);
 

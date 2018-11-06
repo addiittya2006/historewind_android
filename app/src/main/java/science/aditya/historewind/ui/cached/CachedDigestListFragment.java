@@ -21,7 +21,6 @@ import science.aditya.historewind.data.model.DateDigest;
 
 public class CachedDigestListFragment extends Fragment {
 
-//    ArrayAdapter<DateDigest> listAdapter;
     CachedDigestListAdapter listAdapter;
     List<DateDigest> fileList = new ArrayList<>();
 
@@ -80,9 +79,7 @@ public class CachedDigestListFragment extends Fragment {
         return rootView;
     }
 
-
     private OnItemSelectedListener listener;
-
 
     @Override
     public void onAttach(Context context) {
@@ -94,7 +91,6 @@ public class CachedDigestListFragment extends Fragment {
                     + " must implement Adapter's Listener");
         }
     }
-
 
     public interface OnItemSelectedListener {
         void onItemSelected(String month, String date, int tod);
