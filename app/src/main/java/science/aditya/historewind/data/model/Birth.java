@@ -1,4 +1,3 @@
-
 package science.aditya.historewind.data.model;
 
 import com.google.gson.annotations.Expose;

@@ -19,8 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:visibility="gone"
-        android:text="Sorry!, No Cached Digests."/>
+        android:text="No offline digests saved."/>
 
 </RelativeLayout>

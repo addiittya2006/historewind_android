@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
@@ -33,13 +32,14 @@ public class EventFetchUtil {
     private Context appContext;
     private ViewPager mPager;
     private RelativeLayout actionBar;
-    private FrameLayout tintWindow;
+//    private FrameLayout tintWindow;
 
-    public EventFetchUtil(ViewPager viewPager, RelativeLayout bar, FrameLayout tint, final Context context) {
+//    public EventFetchUtil(ViewPager viewPager, RelativeLayout bar, FrameLayout tint, final Context context) {
+    public EventFetchUtil(ViewPager viewPager, RelativeLayout bar, final Context context) {
         this.appContext = context;
         this.mPager = viewPager;
         this.actionBar = bar;
-        this.tintWindow = tint;
+//        this.tintWindow = tint;
     }
 
     public void fetchDigest(RequestQueue rq, String BASE_URL, final String date, int tod, final EventPagerAdapter mPagerAdapter, final List<HistoryEvent> curDigest) {
@@ -96,9 +96,9 @@ public class EventFetchUtil {
 //                            arr1.setVisibility(View.GONE);
 //                            arr2.setVisibility(View.GONE);
 //                            customArrowAnim.stop();
+//                            tintWindow.setVisibility(View.GONE);
                             actionBar.setVisibility(View.VISIBLE);
                             mPager.setVisibility(View.VISIBLE);
-                            tintWindow.setVisibility(View.GONE);
 
                         } catch (Exception e){
                             Log.d("Error", "Some Internal Error Occurred"+e.toString());

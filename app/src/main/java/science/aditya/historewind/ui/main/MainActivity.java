@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -46,11 +45,11 @@ public class MainActivity extends FragmentActivity {
     private ViewPager mPager;
     private EventPagerAdapter mPagerAdapter;
     private List<HistoryEvent> curDigest = new ArrayList<>();
-//    private int screenWidth;
-    private RelativeLayout actionBar;
 //    private ImageView arr1, arr2, arr3;
 //    private CustomArrowAnim customArrowAnim;
-    private FrameLayout tintWindow;
+//    private int screenWidth;
+//    private FrameLayout tintWindow;
+    private RelativeLayout actionBar;
     private Set<String> cached;
 
     private final String BASE_URL = "https://history.aditya.science/";
@@ -76,9 +75,9 @@ public class MainActivity extends FragmentActivity {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = prefs.edit();
 
-        tintWindow = (FrameLayout) findViewById(R.id.tint);
 
 //        TODO: implement arrow animator
+//        tintWindow = (FrameLayout) findViewById(R.id.tint);
 //        arr1 = (ImageView) findViewById(R.id.arr1);
 //        arr2 = (ImageView) findViewById(R.id.arr2);
 //        arr3 = (ImageView) findViewById(R.id.arr3);
@@ -126,7 +125,8 @@ public class MainActivity extends FragmentActivity {
         curDateTv.setText(tvCurDate);
 
         requestQueue = Volley.newRequestQueue(this);
-        EventFetchUtil ef = new EventFetchUtil(mPager, actionBar, tintWindow, getApplicationContext());
+//        EventFetchUtil ef = new EventFetchUtil(mPager, actionBar, tintWindow, getApplicationContext());
+        EventFetchUtil ef = new EventFetchUtil(mPager, actionBar, getApplicationContext());
         ef.fetchDigest(requestQueue, BASE_URL, curDate, du.getTod(), mPagerAdapter, curDigest);
 
         ImageButton reverse = (ImageButton) findViewById(R.id.rev);
