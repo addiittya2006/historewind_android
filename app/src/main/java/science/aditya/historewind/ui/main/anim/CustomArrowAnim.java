@@ -1,10 +1,9 @@
-package science.aditya.historewind.ui.events.anim;
+package science.aditya.historewind.ui.main.anim;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.view.View;
 import android.widget.ImageView;
 
 public class CustomArrowAnim {
@@ -53,7 +52,7 @@ public class CustomArrowAnim {
 
             @Override
             public void onAnimationStart(Animator animation) {
-                arrow1.setVisibility(View.VISIBLE);
+//                arrow1.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -92,7 +91,7 @@ public class CustomArrowAnim {
 
             @Override
             public void onAnimationStart(Animator animation) {
-                arrow2.setVisibility(View.VISIBLE);
+//                arrow2.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -131,7 +130,7 @@ public class CustomArrowAnim {
 
             @Override
             public void onAnimationStart(Animator animation) {
-                arrow3.setVisibility(View.VISIBLE);
+//                arrow3.setVisibility(View.VISIBLE);
             }
 
             @Override

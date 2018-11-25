@@ -10,11 +10,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -32,8 +34,9 @@ import science.aditya.historewind.R;
 import science.aditya.historewind.data.api.EventFetchUtil;
 import science.aditya.historewind.data.model.HistoryEvent;
 import science.aditya.historewind.ui.cached.CachedDigestActivity;
-import science.aditya.historewind.ui.events.EventPagerAdapter;
-import science.aditya.historewind.ui.events.EventPagerTransformer;
+import science.aditya.historewind.ui.main.events.EventPagerAdapter;
+import science.aditya.historewind.ui.main.events.EventPagerTransformer;
+import science.aditya.historewind.ui.main.anim.CustomArrowAnim;
 import science.aditya.historewind.util.DateUtil;
 
 /**
@@ -45,11 +48,11 @@ public class MainActivity extends FragmentActivity {
     private ViewPager mPager;
     private EventPagerAdapter mPagerAdapter;
     private List<HistoryEvent> curDigest = new ArrayList<>();
-//    private ImageView arr1, arr2, arr3;
-//    private CustomArrowAnim customArrowAnim;
-//    private int screenWidth;
-//    private FrameLayout tintWindow;
-    private RelativeLayout actionBar;
+    private ImageView arr1, arr2, arr3;
+    private CustomArrowAnim customArrowAnim;
+    private int screenWidth;
+    private FrameLayout tintWindow;
+//    private RelativeLayout actionBar;
     private Set<String> cached;
 
     private final String BASE_URL = "https://history.aditya.science/";
@@ -61,16 +64,16 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBack));
         }
 
-//        DisplayMetrics displaymetrics = new DisplayMetrics();
-//        this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-//        screenWidth = displaymetrics.widthPixels;
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        screenWidth = displaymetrics.widthPixels;
 
-        actionBar = (RelativeLayout) findViewById(R.id.datebar);
-        actionBar.setVisibility(View.GONE);
+//        actionBar = (RelativeLayout) findViewById(R.id.datebar);
+//        actionBar.setVisibility(View.GONE);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = prefs.edit();
@@ -88,8 +91,8 @@ public class MainActivity extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
 
         float density = getResources().getDisplayMetrics().density;
-        float pagerMargin = 32*density;
-        float pageMargin = 8*density;
+        float pagerMargin = 40*density;
+        float pageMargin = 10*density;
 
         Point screen = new Point();
         getWindowManager().getDefaultDisplay().getSize(screen);
@@ -125,8 +128,9 @@ public class MainActivity extends FragmentActivity {
         curDateTv.setText(tvCurDate);
 
         requestQueue = Volley.newRequestQueue(this);
-//        EventFetchUtil ef = new EventFetchUtil(mPager, actionBar, tintWindow, getApplicationContext());
-        EventFetchUtil ef = new EventFetchUtil(mPager, actionBar, getApplicationContext());
+//        EventFetchUtil ef = new EventFetchUtil(mPager, customArrowAnim, tintWindow, getApplicationContext());
+        EventFetchUtil ef = new EventFetchUtil(mPager, getApplicationContext());
+//        EventFetchUtil ef = new EventFetchUtil(mPager, actionBar, getApplicationContext());
         ef.fetchDigest(requestQueue, BASE_URL, curDate, du.getTod(), mPagerAdapter, curDigest);
 
         ImageButton reverse = (ImageButton) findViewById(R.id.rev);

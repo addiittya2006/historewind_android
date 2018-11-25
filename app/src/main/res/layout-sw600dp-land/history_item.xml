@@ -15,7 +15,7 @@
 
         <ImageView
             android:id="@+id/eventImage"
-            android:layout_width="200dp"
+            android:layout_width="400dp"
             android:layout_height="match_parent"
             android:src="@drawable/ico"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -41,12 +41,12 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="25dp"
                     android:text="Year"
                     android:textColor="@color/colorSecondary"
-                    android:textSize="28sp"
+                    android:textSize="32sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -54,16 +54,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/yearTextView"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginBottom="25dp"
                     android:text="description"
-                    android:textSize="18sp" />
+                    android:textSize="25sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="15dp"
+                    android:layout_height="25dp"
                     android:layout_below="@+id/descTextView" />
 
             </RelativeLayout>
@@ -73,9 +73,9 @@
         <TextView
             android:id="@+id/typeTextView"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="35dp"
             android:gravity="center"
-            android:textSize="12sp"
+            android:textSize="22sp"
             android:textStyle="italic"
             android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"/>

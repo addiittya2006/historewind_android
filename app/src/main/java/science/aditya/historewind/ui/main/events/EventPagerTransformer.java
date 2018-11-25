@@ -1,4 +1,4 @@
-package science.aditya.historewind.ui.events;
+package science.aditya.historewind.ui.main.events;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
