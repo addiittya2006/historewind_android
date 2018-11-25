@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,8 +23,8 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
 
         setContentView(R.layout.activity_cache);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBack));
         }
 
         if (savedInstanceState == null) {
@@ -53,7 +54,8 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
 
 
                 FragmentTransaction lft = getSupportFragmentManager().beginTransaction();
-                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                        || getString(R.string.screen_type).equals("10intab")) {
                     getSupportFragmentManager().popBackStack();
                     lft.add(R.id.fragDetailContainer, detailFragment);
                     lft.commit();
@@ -93,7 +95,8 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
         args.putInt("tod", tod);
         detailFragment.setArguments(args);
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                || getString(R.string.screen_type).equals("10intab")){
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragDetailContainer, detailFragment)
@@ -112,7 +115,8 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                || getString(R.string.screen_type).equals("10intab")) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragDetailContainer);
             if(fragment!=null&&fragment.isVisible()) {
                 outState.putString("month", fragment.getArguments().getString("month"));

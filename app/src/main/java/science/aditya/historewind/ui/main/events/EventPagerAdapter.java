@@ -1,4 +1,4 @@
-package science.aditya.historewind.ui.events;
+package science.aditya.historewind.ui.main.events;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

@@ -20,69 +20,69 @@
                 android:layout_height="wrap_content">
 
                 <ImageButton
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:id="@+id/rev"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="25dp"
                     android:background="@drawable/ic_rev"/>
 
                 <LinearLayout
                     android:id="@+id/logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="60dp"
                     android:orientation="horizontal"
                     android:layout_centerHorizontal="true">
 
                     <!--4.251-->
                     <ImageView
                         android:id="@+id/hist"
-                        android:layout_width="127.53dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_width="170.04dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
                         android:src="@drawable/histore"/>
 
                     <!--0.923-->
                     <ImageView
                         android:id="@+id/rew"
-                        android:layout_width="27.69dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_width="36.92dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="7dp"
                         android:src="@drawable/arr"/>
 
                     <!--1.791-->
                     <ImageView
                         android:id="@+id/ind"
-                        android:layout_width="53.73dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_width="71.64dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
                         android:src="@drawable/ind"/>
 
                 </LinearLayout>
 
                 <ImageButton
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:id="@+id/download"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="25dp"
                     android:background="@drawable/ic_down"/>
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:id="@+id/done"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="25dp"
                     android:background="@drawable/ic_done"
                     android:visibility="gone"/>
 
@@ -92,7 +92,7 @@
                 android:id="@+id/curDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="22sp"
                 android:gravity="center"
                 android:layout_below="@+id/bar" />
 

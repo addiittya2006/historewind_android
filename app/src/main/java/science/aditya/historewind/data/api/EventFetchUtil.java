@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,21 +24,24 @@ import java.util.List;
 
 import science.aditya.historewind.data.model.Digest;
 import science.aditya.historewind.data.model.HistoryEvent;
-import science.aditya.historewind.ui.events.EventPagerAdapter;
+import science.aditya.historewind.ui.main.events.EventPagerAdapter;
 
 public class EventFetchUtil {
 
     private Context appContext;
     private ViewPager mPager;
-    private RelativeLayout actionBar;
+//    private RelativeLayout actionBar;
 //    private FrameLayout tintWindow;
+//    private CustomArrowAnim animator;
 
-//    public EventFetchUtil(ViewPager viewPager, RelativeLayout bar, FrameLayout tint, final Context context) {
-    public EventFetchUtil(ViewPager viewPager, RelativeLayout bar, final Context context) {
+//    public EventFetchUtil(ViewPager viewPager, CustomArrowAnim animator, FrameLayout tint, final Context context) {
+//    public EventFetchUtil(ViewPager viewPager, RelativeLayout bar, final Context context) {
+    public EventFetchUtil(ViewPager viewPager, final Context context) {
         this.appContext = context;
         this.mPager = viewPager;
-        this.actionBar = bar;
+//        this.actionBar = bar;
 //        this.tintWindow = tint;
+//        this.animator = animator;
     }
 
     public void fetchDigest(RequestQueue rq, String BASE_URL, final String date, int tod, final EventPagerAdapter mPagerAdapter, final List<HistoryEvent> curDigest) {
@@ -91,13 +93,8 @@ public class EventFetchUtil {
                             curDigest.addAll(digest.getEvents());
                             curDigest.addAll(digest.getDeaths());
                             mPagerAdapter.notifyDataSetChanged();
-//                            TODO: implement arrow animator
-//                            arr3.setVisibility(View.GONE);
-//                            arr1.setVisibility(View.GONE);
-//                            arr2.setVisibility(View.GONE);
-//                            customArrowAnim.stop();
+//                            animator.stop();
 //                            tintWindow.setVisibility(View.GONE);
-                            actionBar.setVisibility(View.VISIBLE);
                             mPager.setVisibility(View.VISIBLE);
 
                         } catch (Exception e){
