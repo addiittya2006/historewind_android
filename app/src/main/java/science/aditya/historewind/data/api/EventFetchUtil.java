@@ -1,113 +1,124 @@
 package science.aditya.historewind.data.api;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.ViewPager;
 import science.aditya.historewind.data.model.Digest;
 import science.aditya.historewind.data.model.HistoryEvent;
 import science.aditya.historewind.ui.main.events.EventPagerAdapter;
 
 public class EventFetchUtil {
 
-    private Context appContext;
+    private Context context;
     private ViewPager mPager;
-//    private RelativeLayout actionBar;
-//    private FrameLayout tintWindow;
-//    private CustomArrowAnim animator;
+    private EventPagerAdapter mPagerAdapter;
+    private List<HistoryEvent> curDigest;
 
-//    public EventFetchUtil(ViewPager viewPager, CustomArrowAnim animator, FrameLayout tint, final Context context) {
-//    public EventFetchUtil(ViewPager viewPager, RelativeLayout bar, final Context context) {
-    public EventFetchUtil(ViewPager viewPager, final Context context) {
-        this.appContext = context;
+    public EventFetchUtil(final Context context, ViewPager viewPager, EventPagerAdapter adapter, List<HistoryEvent> curDigest) {
+        this.context = context;
         this.mPager = viewPager;
-//        this.actionBar = bar;
-//        this.tintWindow = tint;
-//        this.animator = animator;
+        this.mPagerAdapter = adapter;
+        this.curDigest = curDigest;
     }
 
-    public void fetchDigest(RequestQueue rq, String BASE_URL, final String date, int tod, final EventPagerAdapter mPagerAdapter, final List<HistoryEvent> curDigest) {
+    public void fetchDigest(final String date, int tod) {
         final String digestType;
+
         if (tod==1){
             digestType = "eve";
         } else {
             digestType = "morn";
         }
-        String curURL = BASE_URL+date+"/"+digestType+"_digest.json";
 
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET, curURL,null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        FileOutputStream outputStream;
-                        FileInputStream cachedDigest = null;
-                        try{
-                            cachedDigest = appContext.openFileInput(date+"_"+digestType+".digest");
-                        } catch (FileNotFoundException fnfe) {
-                            try {
-                                File[] digestfiles = appContext.getFilesDir().listFiles();
-                                for (File file:digestfiles) {
-                                    if (file.isFile() && file.getPath().endsWith(".digest")) {
-                                        file.delete();
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        final String curFile = date + "/" + digestType + "_digest.json";
+
+        StorageReference pathReference = mStorageRef.child(curFile);
+
+        FileInputStream cachedDigest;
+
+        try {
+            cachedDigest = context.openFileInput(date + "_" + digestType + ".digest");
+            parseFile(cachedDigest);
+        } catch (FileNotFoundException fnfe) {
+            try {
+                final File localFile = File.createTempFile("curFile", "json");
+                pathReference.getFile(localFile)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                FileOutputStream outputStream;
+                                try {
+                                    File[] digestfiles = context.getFilesDir().listFiles();
+                                    for (File file : digestfiles) {
+                                        if (file.isFile() && file.getPath().endsWith(".digest")) {
+                                            if (file.delete()) {
+                                                Log.d("File", "");
+                                            }
+                                        }
                                     }
+                                    outputStream = context.openFileOutput(date + "_" + digestType + ".digest", Context.MODE_PRIVATE);
+                                    int length = (int) localFile.length();
+                                    byte[] content = new byte[length];
+                                    FileInputStream fin = new FileInputStream(localFile);
+                                    if (fin.read(content) > 0) {
+                                        Log.d("File", "");
+                                    }
+                                    outputStream.write(content);
+                                    outputStream.close();
+                                    FileInputStream cachedDigest = context.openFileInput(date + "_" + digestType + ".digest");
+                                    parseFile(cachedDigest);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                                outputStream = appContext.openFileOutput(date+"_"+digestType+".digest", Context.MODE_PRIVATE);
-                                outputStream.write(jsonObject.toString().getBytes());
-                                outputStream.close();
-                                cachedDigest = appContext.openFileInput(date+"_"+digestType+".digest");
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
-                        }
-                        try {
-                            BufferedReader br = new BufferedReader(new InputStreamReader(cachedDigest, "UTF-8"));
-                            StringBuilder sb = new StringBuilder();
-                            String line;
-                            while(( line = br.readLine()) != null ) {
-                                sb.append( line );
-                                sb.append( '\n' );
-                            }
-
-                            Gson gson = new Gson();
-                            Digest digest = gson.fromJson(sb.toString(), Digest.class);
-                            curDigest.addAll(digest.getBirths());
-                            curDigest.addAll(digest.getEvents());
-                            curDigest.addAll(digest.getDeaths());
-                            mPagerAdapter.notifyDataSetChanged();
-//                            animator.stop();
-//                            tintWindow.setVisibility(View.GONE);
-                            mPager.setVisibility(View.VISIBLE);
-
-                        } catch (Exception e){
-                            Log.d("Error", "Some Internal Error Occurred"+e.toString());
-                        }
-                    }},
-                new Response.ErrorListener() {
+                        }).addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Log.i("", "Not connected");
+                    public void onFailure(@NonNull Exception exception) {
                     }
                 });
-        rq.add(request);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    private void parseFile(FileInputStream fileInputStream) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+            sb.append('\n');
+        }
+        Gson gson = new Gson();
+        Digest digest = gson.fromJson(sb.toString(), Digest.class);
+        curDigest.addAll(digest.getBirths());
+        curDigest.addAll(digest.getEvents());
+        curDigest.addAll(digest.getDeaths());
+        mPagerAdapter.notifyDataSetChanged();
+        mPager.setVisibility(View.VISIBLE);
+    }
 }

@@ -6,21 +6,13 @@ import java.util.HashMap;
 
 public class DateUtil {
 
-    Calendar cal = new GregorianCalendar();
+    private Calendar cal = new GregorianCalendar();
 
     public int getTod() {
         return cal.get(Calendar.AM_PM);
     }
 
     public String getMonth() {
-        return getStringMonth(cal.get(Calendar.MONTH));
-    }
-
-    public int getDate() {
-        return cal.get(Calendar.DAY_OF_MONTH);
-    }
-
-    String getStringMonth(int month) {
         HashMap<String, String> map = new HashMap<>();
 
         map.put("0", "January");
@@ -36,7 +28,11 @@ public class DateUtil {
         map.put("10", "November");
         map.put("11", "December");
 
-        return map.get(Integer.toString(month));
+        return map.get(Integer.toString(cal.get(Calendar.MONTH)));
+    }
+
+    public int getDate() {
+        return cal.get(Calendar.DAY_OF_MONTH);
     }
 
 }

@@ -9,18 +9,12 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,34 +24,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 import science.aditya.historewind.R;
 import science.aditya.historewind.data.api.EventFetchUtil;
 import science.aditya.historewind.data.model.HistoryEvent;
 import science.aditya.historewind.ui.cached.CachedDigestActivity;
 import science.aditya.historewind.ui.main.events.EventPagerAdapter;
 import science.aditya.historewind.ui.main.events.EventPagerTransformer;
-import science.aditya.historewind.ui.main.anim.CustomArrowAnim;
 import science.aditya.historewind.util.DateUtil;
 
 /**
  * Created by addiittya on 13/03/17.
  */
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     private ViewPager mPager;
-    private EventPagerAdapter mPagerAdapter;
     private List<HistoryEvent> curDigest = new ArrayList<>();
-    private ImageView arr1, arr2, arr3;
-    private CustomArrowAnim customArrowAnim;
-    private int screenWidth;
-    private FrameLayout tintWindow;
-//    private RelativeLayout actionBar;
     private Set<String> cached;
-
-    private final String BASE_URL = "https://history.aditya.science/";
-
-    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,25 +56,11 @@ public class MainActivity extends FragmentActivity {
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        screenWidth = displaymetrics.widthPixels;
-
-//        actionBar = (RelativeLayout) findViewById(R.id.datebar);
-//        actionBar.setVisibility(View.GONE);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = prefs.edit();
 
-
-//        TODO: implement arrow animator
-//        tintWindow = (FrameLayout) findViewById(R.id.tint);
-//        arr1 = (ImageView) findViewById(R.id.arr1);
-//        arr2 = (ImageView) findViewById(R.id.arr2);
-//        arr3 = (ImageView) findViewById(R.id.arr3);
-
-//        customArrowAnim = new CustomArrowAnim(screenWidth, arr1, arr2, arr3);
-//        customArrowAnim.start();
-
-        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager = findViewById(R.id.pager);
 
         float density = getResources().getDisplayMetrics().density;
         float pagerMargin = 40*density;
@@ -100,7 +72,7 @@ public class MainActivity extends FragmentActivity {
         float pagerDrawOffset = (pagerMargin)/(screen.x - 2*pagerMargin);
         EventPagerTransformer eventPagerTransformer = new EventPagerTransformer(pagerDrawOffset);
 
-        mPagerAdapter = new EventPagerAdapter(getSupportFragmentManager(), curDigest);
+        EventPagerAdapter mPagerAdapter = new EventPagerAdapter(getSupportFragmentManager(), curDigest);
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageMargin((int) pageMargin);
         mPager.setPageTransformer(false, eventPagerTransformer);
@@ -109,14 +81,15 @@ public class MainActivity extends FragmentActivity {
 
         ConnectivityManager conMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
+        if (conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
                 && conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
             Intent i = new Intent(MainActivity.this, CachedDigestActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             File cacheDirectory = new File(getFilesDir().getAbsolutePath()+File.separator+"cached");
-            if(!cacheDirectory.exists()) {
-                cacheDirectory.mkdirs();
-            }
+            if(!cacheDirectory.exists())
+                if (cacheDirectory.mkdirs()) {
+                    Log.d("Directories", "");
+                }
             startActivity(i);
         }
 
@@ -124,30 +97,27 @@ public class MainActivity extends FragmentActivity {
         String curDate = du.getMonth()+"_"+Integer.toString(du.getDate());
         String tvCurDate = du.getMonth()+" "+Integer.toString(du.getDate());
 
-        TextView curDateTv = (TextView) findViewById(R.id.curDate);
+        TextView curDateTv = findViewById(R.id.curDate);
         curDateTv.setText(tvCurDate);
 
-        requestQueue = Volley.newRequestQueue(this);
-//        EventFetchUtil ef = new EventFetchUtil(mPager, customArrowAnim, tintWindow, getApplicationContext());
-        EventFetchUtil ef = new EventFetchUtil(mPager, getApplicationContext());
-//        EventFetchUtil ef = new EventFetchUtil(mPager, actionBar, getApplicationContext());
-        ef.fetchDigest(requestQueue, BASE_URL, curDate, du.getTod(), mPagerAdapter, curDigest);
+        new EventFetchUtil(this, mPager, mPagerAdapter, curDigest).fetchDigest(curDate, du.getTod());
 
-        ImageButton reverse = (ImageButton) findViewById(R.id.rev);
+        ImageButton reverse = findViewById(R.id.rev);
         reverse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, CachedDigestActivity.class);
                 File cacheDirectory = new File(getFilesDir().getAbsolutePath()+File.separator+"cached");
-                if(!cacheDirectory.exists()) {
-                    cacheDirectory.mkdirs();
-                }
+                if(!cacheDirectory.exists())
+                    if (cacheDirectory.mkdirs()) {
+                        Log.d("Directories", "");
+                    }
                 startActivity(i);
             }
         });
 
-        final ImageButton saveToCache = (ImageButton) findViewById(R.id.download);
-        final ImageView doneCaching = (ImageView) findViewById(R.id.done);
+        final ImageButton saveToCache = findViewById(R.id.download);
+        final ImageView doneCaching = findViewById(R.id.done);
 
 
         String timeOfDay;
@@ -165,7 +135,7 @@ public class MainActivity extends FragmentActivity {
             doneCaching.setVisibility(View.VISIBLE);
         } else {
             editor.putStringSet("cached", cached);
-            editor.commit();
+            editor.apply();
         }
 
 
@@ -175,13 +145,15 @@ public class MainActivity extends FragmentActivity {
                 try {
                     FileInputStream cachedDigest = openFileInput(path);
                     File cacheDirectory = new File(getFilesDir().getAbsolutePath()+File.separator+"cached");
-                    if(!cacheDirectory.exists()) {
-                        cacheDirectory.mkdirs();
-                    }
+                    if (!cacheDirectory.exists())
+                        if (cacheDirectory.mkdirs()) {
+                            Log.d("Directories", "");
+                        }
                     File saveFile = new File( cacheDirectory.getAbsolutePath()+File.separator+path);
-                    if(!saveFile.exists()){
-                        saveFile.createNewFile();
-                    }
+                    if (!saveFile.exists())
+                        if (saveFile.createNewFile()) {
+                            Log.d("Directories", "");
+                        }
                     FileOutputStream saveFileStream = new FileOutputStream(saveFile, false);
 
                     byte[] buffer = new byte[1024];

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Historewind</string>
+    <string name="offline_head">Offline Digests</string>
 </resources>

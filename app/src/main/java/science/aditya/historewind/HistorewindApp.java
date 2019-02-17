@@ -2,14 +2,13 @@ package science.aditya.historewind;
 
 import android.app.Application;
 
-import com.squareup.leakcanary.LeakCanary;
+import com.google.firebase.FirebaseApp;
 
 public class HistorewindApp extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {}
-        LeakCanary.install(this);
+        FirebaseApp.initializeApp(this);
     }
 }

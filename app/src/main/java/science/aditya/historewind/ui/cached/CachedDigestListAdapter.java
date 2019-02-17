@@ -10,15 +10,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import science.aditya.historewind.R;
 import science.aditya.historewind.data.model.DateDigest;
 
 public class CachedDigestListAdapter extends ArrayAdapter<DateDigest> {
 
-    private List<DateDigest> cachedDigests = new ArrayList<>();
+    private List<DateDigest> cachedDigests;
     private Context c;
 
     static class DigestListViewHolder {
@@ -26,7 +27,7 @@ public class CachedDigestListAdapter extends ArrayAdapter<DateDigest> {
         TextView digestDate;
     }
 
-    public CachedDigestListAdapter(Context context, List<DateDigest> digestList) {
+    CachedDigestListAdapter(Context context, List<DateDigest> digestList) {
         super(context, 0, digestList);
         this.cachedDigests = digestList;
         this.c = context;
@@ -48,31 +49,34 @@ public class CachedDigestListAdapter extends ArrayAdapter<DateDigest> {
         return this.cachedDigests.get(index);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @Nullable ViewGroup parent) {
 
         View row = convertView;
-        DigestListViewHolder viewHolder = null;
+        DigestListViewHolder viewHolder;
 
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.digest_item_lv, parent, false);
             viewHolder = new DigestListViewHolder();
-            viewHolder.digestDate = (TextView) row.findViewById(R.id.lvDateView);
-            viewHolder.digestImage = (ImageView) row.findViewById(R.id.lvImgView);
+            viewHolder.digestDate = row.findViewById(R.id.lvDateView);
+            viewHolder.digestImage = row.findViewById(R.id.lvImgView);
         } else {
             viewHolder = new DigestListViewHolder();
-            viewHolder.digestDate = (TextView) row.findViewById(R.id.lvDateView);
-            viewHolder.digestImage = (ImageView) row.findViewById(R.id.lvImgView);
+            viewHolder.digestDate = row.findViewById(R.id.lvDateView);
+            viewHolder.digestImage = row.findViewById(R.id.lvImgView);
         }
 
         DateDigest dd = getItem(position);
-        String dateSet = dd.getMonth()+" "+dd.getDate();
-        viewHolder.digestDate.setText(dateSet);
-        if(dd.getTod() == 0) {
-            Glide.with(c).load(R.drawable.sun).into(viewHolder.digestImage);
-        } else {
-            Glide.with(c).load(R.drawable.moon).into(viewHolder.digestImage);
+        if (dd != null) {
+            String dateSet = dd.getMonth() + " " + dd.getDate();
+            viewHolder.digestDate.setText(dateSet);
+            if (dd.getTod() == 0) {
+                Glide.with(c).load(R.drawable.sun).into(viewHolder.digestImage);
+            } else {
+                Glide.with(c).load(R.drawable.moon).into(viewHolder.digestImage);
+            }
         }
         return row;
     }

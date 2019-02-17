@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "370052429963",
+    "firebase_url": "https://historewind.firebaseio.com",
+    "project_id": "historewind",
+    "storage_bucket": "historewind.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370052429963:android:e6c5fce089032155",
+        "android_client_info": {
+          "package_name": "science.aditya.historewind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "370052429963-qks434gf4146irav15rnlrakoqplj34m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "science.aditya.historewind",
+            "certificate_hash": "3b261dc38d2a19269bb99d644faa50be386833a2"
+          }
+        },
+        {
+          "client_id": "370052429963-10etocqldqedekvd483mtr33e7inlue8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNBTeGpoS8mJxOwlOHaXuPuDaHr7vRXZw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "370052429963-10etocqldqedekvd483mtr33e7inlue8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

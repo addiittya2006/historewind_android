@@ -6,13 +6,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import science.aditya.historewind.R;
 
 public class CachedDigestActivity extends AppCompatActivity implements CachedDigestListFragment.OnItemSelectedListener {
@@ -66,7 +66,7 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
             }
         }
 
-        ImageView backButton = (ImageView) findViewById(R.id.back_button);
+        ImageView backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +79,7 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
     public void onBackPressed() {
         super.onBackPressed();
         ConnectivityManager conMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
+        if (conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
                 && conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
             finish();
         }
@@ -101,31 +101,30 @@ public class CachedDigestActivity extends AppCompatActivity implements CachedDig
                     .beginTransaction()
                     .replace(R.id.fragDetailContainer, detailFragment)
                     .commit();
-        }else{
+        } else {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragContainer, detailFragment)
                     .addToBackStack(null)
                     .commit();
         }
-
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
                 || getString(R.string.screen_type).equals("10intab")) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragDetailContainer);
-            if(fragment!=null&&fragment.isVisible()) {
+            if (fragment!=null && fragment.isVisible() && fragment.getArguments() != null) {
                 outState.putString("month", fragment.getArguments().getString("month"));
                 outState.putInt("date", fragment.getArguments().getInt("date"));
                 outState.putInt("tod", fragment.getArguments().getInt("tod"));
             }
-        }else{
+        } else {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
-            if(fragment!=null&&fragment.isVisible()&&fragment instanceof CachedDigestDetailFragment) {
+            if (fragment!=null && fragment.isVisible()
+                    && fragment instanceof CachedDigestDetailFragment && fragment.getArguments() != null) {
                 outState.putString("month", fragment.getArguments().getString("month"));
                 outState.putInt("date", fragment.getArguments().getInt("date"));
                 outState.putInt("tod", fragment.getArguments().getInt("tod"));
