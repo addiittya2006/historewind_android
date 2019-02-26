@@ -7,19 +7,18 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginLeft="28dp"
         android:choiceMode="singleChoice"
-        android:id="@+id/digestList"
-        android:divider="@null" />
+        android:id="@+id/digestList"/>
 
     <TextView
         android:id="@+id/noDigestView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:visibility="gone"
         android:text="No offline digests saved."/>
 

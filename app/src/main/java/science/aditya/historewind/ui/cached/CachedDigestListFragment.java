@@ -1,6 +1,7 @@
 package science.aditya.historewind.ui.cached;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,8 @@ public class CachedDigestListFragment extends Fragment {
 
         if (fileList.size()>0) {
             lvItems.setAdapter(listAdapter);
+            lvItems.setDivider(getResources().getDrawable(R.drawable.lv_divider));
+            lvItems.setDividerHeight(1);
             lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
