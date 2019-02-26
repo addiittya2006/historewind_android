@@ -1,12 +1,13 @@
 package science.aditya.historewind.ui.main.events;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import science.aditya.historewind.data.model.HistoryEvent;
 
 /**
@@ -16,7 +17,6 @@ import science.aditya.historewind.data.model.HistoryEvent;
 public class EventPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final int NUM_PAGES = 10;
-    private static List<EventFragment> mFragments;
     private List<HistoryEvent> list;
 
     public EventPagerAdapter(FragmentManager fm, List<HistoryEvent> curDigest) {
@@ -40,13 +40,14 @@ public class EventPagerAdapter extends FragmentStatePagerAdapter {
         return NUM_PAGES;
     }
 
+    @NonNull
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         return super.instantiateItem(container, position);
     }
 
     @Override
-    public int getItemPosition(Object object) {
+    public int getItemPosition(@NonNull Object object) {
         EventFragment fragment = (EventFragment) object;
         HistoryEvent historyEvent = fragment.getHistoryEvent();
         if(list.size()>0) {

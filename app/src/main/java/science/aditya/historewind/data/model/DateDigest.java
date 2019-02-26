@@ -3,6 +3,8 @@ package science.aditya.historewind.data.model;
 public class DateDigest {
 
     private String month;
+    private String date;
+    private int tod;
 
     public String getMonth() {
         return month;
@@ -11,9 +13,6 @@ public class DateDigest {
     public void setMonth(String month) {
         this.month = month;
     }
-
-    private String date;
-    private int tod;
 
     public String getDate() {
         return date;

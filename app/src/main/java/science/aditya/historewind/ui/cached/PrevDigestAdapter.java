@@ -2,8 +2,6 @@ package science.aditya.historewind.ui.cached;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +14,8 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import science.aditya.historewind.R;
 import science.aditya.historewind.data.model.HistoryEvent;
 
@@ -24,7 +24,7 @@ public class PrevDigestAdapter extends RecyclerView.Adapter<PrevDigestAdapter.Hi
     private List<HistoryEvent> events;
     private Context context;
 
-    public static class  HistoryEventViewHolder extends RecyclerView.ViewHolder{
+    static class  HistoryEventViewHolder extends RecyclerView.ViewHolder{
 
         TextView rvYearView;
         TextView rvDescView;
@@ -34,14 +34,14 @@ public class PrevDigestAdapter extends RecyclerView.Adapter<PrevDigestAdapter.Hi
         HistoryEventViewHolder(View itemView){
             super(itemView);
 
-            rvImgView = (ImageView) itemView.findViewById(R.id.rvImageView);
-            rvTypeView = (TextView) itemView.findViewById(R.id.rvTypeView);
-            rvYearView = (TextView) itemView.findViewById(R.id.rvYearView);
-            rvDescView = (TextView) itemView.findViewById(R.id.rvDescView);
+            rvImgView = itemView.findViewById(R.id.rvImageView);
+            rvTypeView = itemView.findViewById(R.id.rvTypeView);
+            rvYearView = itemView.findViewById(R.id.rvYearView);
+            rvDescView = itemView.findViewById(R.id.rvDescView);
 
         }
 
-        public void bind(Context c, HistoryEvent historyEvent) {
+        void bind(Context c, HistoryEvent historyEvent) {
 
             rvYearView.setText(historyEvent.getYear());
             rvDescView.setText(Html.fromHtml(historyEvent.getDesc()).toString());
@@ -78,8 +78,7 @@ public class PrevDigestAdapter extends RecyclerView.Adapter<PrevDigestAdapter.Hi
     @Override
     public HistoryEventViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_item_rv, viewGroup, false);
-        HistoryEventViewHolder vh = new HistoryEventViewHolder(v);
-        return vh;
+        return new HistoryEventViewHolder(v);
     }
 
     @Override
@@ -91,6 +90,5 @@ public class PrevDigestAdapter extends RecyclerView.Adapter<PrevDigestAdapter.Hi
     public int getItemCount() {
         return events.size();
     }
-
 
 }

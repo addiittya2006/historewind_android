@@ -2,9 +2,6 @@ package science.aditya.historewind.ui.main.events;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +12,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import science.aditya.historewind.R;
 import science.aditya.historewind.data.model.HistoryEvent;
 
@@ -24,11 +24,7 @@ import science.aditya.historewind.data.model.HistoryEvent;
 
 public class EventFragment extends Fragment {
 
-    HistoryEvent historyEvent;
-    private String year;
-    private String desc;
-    private String thumb;
-    private int type;
+    private HistoryEvent historyEvent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,17 +33,14 @@ public class EventFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater
-                  .inflate(R.layout.history_item, container, false);
-        return rootView;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.history_item, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         if (historyEvent != null) {
-                type = historyEvent.getEventType();
+                int type = historyEvent.getEventType();
                 String toAdd = "--";
                 int colour = Color.parseColor("#FFFFFF");
 
@@ -62,38 +55,38 @@ public class EventFragment extends Fragment {
                     colour = Color.parseColor("#757575");
                 }
 
-                year = historyEvent.getYear();
-                TextView yearTextView = (TextView) view.findViewById(R.id.yearTextView);
+                String year = historyEvent.getYear();
+                TextView yearTextView = view.findViewById(R.id.yearTextView);
                 yearTextView.setText(year);
 
-                thumb = historyEvent.getThumb();
-                ImageView eventImage = (ImageView) view.findViewById(R.id.eventImage);
+                String thumb = historyEvent.getThumb();
+                ImageView eventImage = view.findViewById(R.id.eventImage);
                 Glide.with(this)
                         .load(thumb)
                         .apply(RequestOptions.placeholderOf(R.drawable.wikimg))
                         .apply(RequestOptions.centerCropTransform())
                         .into(eventImage);
 
-                desc = historyEvent.getDesc();
-                TextView descTextView = (TextView) view.findViewById(R.id.descTextView);
+                String desc = historyEvent.getDesc();
+                TextView descTextView = view.findViewById(R.id.descTextView);
                 descTextView.setText(Html.fromHtml(desc).toString());
 
-                TextView typeTextView = (TextView) view.findViewById(R.id.typeTextView);
+                TextView typeTextView = view.findViewById(R.id.typeTextView);
                 typeTextView.setText(toAdd);
                 typeTextView.setBackgroundColor(colour);
             }
             super.onViewCreated(view, savedInstanceState);
     }
 
-    public static Fragment getInstance() {
+    static Fragment getInstance() {
         return new EventFragment();
     }
 
-    public HistoryEvent getHistoryEvent() {
+    HistoryEvent getHistoryEvent() {
         return historyEvent;
     }
 
-    public void setHistoryEvent(HistoryEvent historyEvent) {
+    void setHistoryEvent(HistoryEvent historyEvent) {
         this.historyEvent = historyEvent;
     }
 }
